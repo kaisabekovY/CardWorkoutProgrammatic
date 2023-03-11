@@ -9,17 +9,23 @@ import UIKit
 
 class CardSelectionVC: UIViewController {
     
+    
+    
     var timer = Timer()
     
+    var secondTimer = Timer()
+    var count = 11
+    
+
     let cards : [UIImage] = Cards.allValues
     
     let cardImage = UIImageView()
     
-    let stopButton = UIButton()
+    let stopButton = CWButton(backgroundCOlor: .systemRed, title: "Stop!")
+    let restartButton = CWButton(backgroundCOlor: .systemGreen, title: "Restart")
+    let rulesButton = CWButton(backgroundCOlor: .systemMint, title: "Rules")
     
-    @objc let restartButton = UIButton()
-    
-    let rulesButton = UIButton()
+    let timerTest = UILabel()
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -27,11 +33,8 @@ class CardSelectionVC: UIViewController {
         title = "First Screen"
         navigationController?.navigationBar.prefersLargeTitles = true
         startTimer()
-        setupCardImage()
-        setupStopButton()
-        setupRestartButton()
-        setupRulesButton()
-        
+        startSecondTimer()
+        configureUI()
 
         
         
@@ -55,19 +58,33 @@ class CardSelectionVC: UIViewController {
         
         
     }
+    func configureUI(){
+        setupTimerTest()
+        setupCardImage()
+        setupStopButton()
+        setupRestartButton()
+        setupRulesButton()
+        
+        
+    }
+    
+    func setupTimerTest() {
+        view.addSubview(timerTest)
+        
+        timerTest.textAlignment = .center
+        timerTest.font = .systemFont(ofSize: 20, weight: .bold)
+        
+        timerTest.translatesAutoresizingMaskIntoConstraints = false
+        
+        NSLayoutConstraint.activate([
+            timerTest.centerXAnchor.constraint(equalTo: view.centerXAnchor),
+            timerTest.topAnchor.constraint(equalTo: view.safeAreaLayoutGuide.topAnchor,constant: 30 ),
+            timerTest.widthAnchor.constraint(equalToConstant: 200)
+        ])
+    }
     
     func setupStopButton(){
         view.addSubview(stopButton)
-        
-        stopButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .heavy)
-
-        stopButton.configuration = .gray()
-        stopButton.configuration?.baseBackgroundColor = .systemRed
-        stopButton.configuration?.baseForegroundColor = .white
-        stopButton.configuration?.title = "Stop!"
-        stopButton.configuration?.cornerStyle = .medium
-        
-        stopButton.translatesAutoresizingMaskIntoConstraints = false
         
         NSLayoutConstraint.activate([
             stopButton.centerYAnchor.constraint(equalTo: cardImage.bottomAnchor, constant: 50),
@@ -83,17 +100,6 @@ class CardSelectionVC: UIViewController {
     func setupRestartButton(){
         view.addSubview(restartButton)
         
-
-        restartButton.configuration = .gray()
-        restartButton.configuration?.baseBackgroundColor = .systemGreen
-        restartButton.configuration?.baseForegroundColor = .white
-        restartButton.configuration?.title = "Restart"
-        restartButton.configuration?.cornerStyle = .medium
-        restartButton.titleLabel?.font = .systemFont(ofSize: 20, weight: .heavy)
-
-
-        restartButton.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
             restartButton.topAnchor.constraint(equalTo: stopButton.bottomAnchor, constant: 20),
             restartButton.leadingAnchor.constraint(equalTo: stopButton.leadingAnchor),
@@ -107,13 +113,6 @@ class CardSelectionVC: UIViewController {
     func setupRulesButton(){
         view.addSubview(rulesButton)
 
-        rulesButton.configuration = .gray()
-        rulesButton.configuration?.baseBackgroundColor = .systemMint
-        rulesButton.configuration?.baseForegroundColor = .white
-        rulesButton.configuration?.title = "Rules"
-        rulesButton.configuration?.cornerStyle = .medium
-        rulesButton.translatesAutoresizingMaskIntoConstraints = false
-
         NSLayoutConstraint.activate([
             rulesButton.topAnchor.constraint(equalTo: stopButton.bottomAnchor, constant: 20),
             rulesButton.trailingAnchor.constraint(equalTo: stopButton.trailingAnchor),
@@ -123,8 +122,6 @@ class CardSelectionVC: UIViewController {
         ])
         
         rulesButton.addTarget(self, action: #selector(toRulesVC), for: .touchUpInside)
-        
-        
     }
     
     @objc func toRulesVC(){
@@ -135,16 +132,41 @@ class CardSelectionVC: UIViewController {
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(showRandomImage), userInfo: nil, repeats: true)
     }
     
+    func startSecondTimer(){
+        secondTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(timerLogic), userInfo: nil, repeats: true)
+    }
+    
     @objc func showRandomImage(){
         cardImage.image = cards.randomElement() ?? UIImage.init(named: "10C")
     }
+    
     @objc func stopTimer(){
+        count = 11
         timer.invalidate()
+        secondTimer.invalidate()
     }
     
     @objc func restartTimer(){
+        startSecondTimer()
         timer.invalidate()
         startTimer()
+    }
+    
+    @objc func timerLogic(){
+        
+        count -= 1
+        
+        timerTest.text = "\(count)"
+        
+        if count <= 3{
+            timerTest.textColor = .systemRed
+        }else {
+            timerTest.textColor = .black
+        }
+        if count == 0{
+            timerTest.text = "DO IT!"
+            stopTimer()
+        }
     }
     
     
