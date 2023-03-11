@@ -146,9 +146,10 @@ class CardSelectionVC: UIViewController {
     }
     
     @objc func restartTimer(){
-        startCountDownTimer()
+        countDown.invalidate()
         timer.invalidate()
         startTimer()
+        startCountDownTimer()
     }
     
     @objc func timerLogic(){
