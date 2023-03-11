@@ -9,11 +9,9 @@ import UIKit
 
 class CardSelectionVC: UIViewController {
     
-    
-    
     var timer = Timer()
     
-    var secondTimer = Timer()
+    var countDown = Timer()
     var count = 11
     
 
@@ -33,7 +31,7 @@ class CardSelectionVC: UIViewController {
         title = "First Screen"
         navigationController?.navigationBar.prefersLargeTitles = true
         startTimer()
-        startSecondTimer()
+        startCountDownTimer()
         configureUI()
 
         
@@ -42,6 +40,7 @@ class CardSelectionVC: UIViewController {
     override func viewWillDisappear(_ animated: Bool) {
         super.viewWillDisappear(animated)
         timer.invalidate()
+        countDown.invalidate()
     }
     
     func setupCardImage(){
@@ -59,7 +58,7 @@ class CardSelectionVC: UIViewController {
         
     }
     func configureUI(){
-        setupTimerTest()
+        setupCountDown()
         setupCardImage()
         setupStopButton()
         setupRestartButton()
@@ -68,7 +67,7 @@ class CardSelectionVC: UIViewController {
         
     }
     
-    func setupTimerTest() {
+    func setupCountDown() {
         view.addSubview(timerTest)
         
         timerTest.textAlignment = .center
@@ -132,8 +131,8 @@ class CardSelectionVC: UIViewController {
         timer = Timer.scheduledTimer(timeInterval: 0.1, target: self, selector: #selector(showRandomImage), userInfo: nil, repeats: true)
     }
     
-    func startSecondTimer(){
-        secondTimer = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(timerLogic), userInfo: nil, repeats: true)
+    func startCountDownTimer(){
+        countDown = Timer.scheduledTimer(timeInterval: 0.7, target: self, selector: #selector(timerLogic), userInfo: nil, repeats: true)
     }
     
     @objc func showRandomImage(){
@@ -143,17 +142,16 @@ class CardSelectionVC: UIViewController {
     @objc func stopTimer(){
         count = 11
         timer.invalidate()
-        secondTimer.invalidate()
+        countDown.invalidate()
     }
     
     @objc func restartTimer(){
-        startSecondTimer()
+        startCountDownTimer()
         timer.invalidate()
         startTimer()
     }
     
     @objc func timerLogic(){
-        
         count -= 1
         
         timerTest.text = "\(count)"
@@ -163,6 +161,7 @@ class CardSelectionVC: UIViewController {
         }else {
             timerTest.textColor = .black
         }
+        
         if count == 0{
             timerTest.text = "DO IT!"
             stopTimer()
