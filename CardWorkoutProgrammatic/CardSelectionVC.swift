@@ -19,10 +19,9 @@ class CardSelectionVC: UIViewController {
     
     let cardImage = UIImageView()
     
-    let stopButton = CWButton(backgroundCOlor: .systemRed, title: "Stop!")
-    let restartButton = CWButton(backgroundCOlor: .systemGreen, title: "Restart")
-    let rulesButton = CWButton(backgroundCOlor: .systemMint, title: "Rules")
-    
+    let stopButton      = CWButton(color: .systemRed, title: "Stop!", systemImageName: "stop.circle")
+    let restartButton   = CWButton(color: .systemGreen, title: "Restart", systemImageName: "arrow.clockwise.circle")
+    let rulesButton     = CWButton(color: .systemMint, title: "Rules", systemImageName: "list.bullet")
     let timerTest = UILabel()
     
     override func viewDidLoad() {
